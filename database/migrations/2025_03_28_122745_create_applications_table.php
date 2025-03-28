@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('announcement_id')->constrained()->onDelete('cascade');
+            $table->string('cv_path');
+            $table->string('motivation_letter_path');
+            $table->enum('status', ['pending', 'reviewed', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }
