@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendApplicationStatusNotification;
 use App\Models\Announcement;
 use App\Models\Application;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,22 +31,32 @@ class ApplicationController extends Controller
         return response()->json($application, 201);
     }
 
-    public function updateStatus(Request $request, Application $application)
+    public function updateStatus(Request $request, Application $application): \Illuminate\Http\JsonResponse
     {
+        // Logique de mise à jour du statut
+        $application->update(['status' => $request->status]);
+
+
         Gate::authorize('updateStatus', $application);
+
+
+
 
         $validatedData = $request->validate([
             'status' => 'required|in:pending,reviewed,accepted,rejected'
         ]);
 
+
         $application->update($validatedData);
 
         // Notification par email serait implémentée ici
+        // Dispatcher le job
+        SendApplicationStatusNotification::dispatch($application);
 
         return response()->json($application);
     }
 
-    public function destroy(Application $application)
+    public function destroy(Application $application): \Illuminate\Http\JsonResponse
     {
         Gate::authorize('delete', $application);
         $application->delete();
