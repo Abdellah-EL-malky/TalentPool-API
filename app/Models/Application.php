@@ -11,12 +11,12 @@ class Application extends Model
         'motivation_letter_path', 'status'
     ];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function announcement()
+    public function announcement(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Announcement::class);
     }
