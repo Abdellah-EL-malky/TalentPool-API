@@ -14,7 +14,7 @@ return [
     'ttl' => 60, // temps de vie du token en minutes
     'refresh_ttl' => 20160, // temps avant expiration pour le refresh
     'algo' => 'HS256',
-];
+
 
     /*
     |--------------------------------------------------------------------------
