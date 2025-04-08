@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\SendApplicationStatusNotification;
 use App\Models\Announcement;
 use App\Models\Application;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,14 +30,10 @@ class ApplicationController extends Controller
         return response()->json($application, 201);
     }
 
-    public function updateStatus(Request $request, Application $application): \Illuminate\Http\JsonResponse
+    public function updateStatus(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         // Logique de mise à jour du statut
-        $application->update(['status' => $request->status]);
-
-
-        Gate::authorize('updateStatus', $application);
-
+        $application = Application::findOrFail($id);
 
 
 
@@ -56,9 +51,14 @@ class ApplicationController extends Controller
         return response()->json($application);
     }
 
-    public function destroy(Application $application): \Illuminate\Http\JsonResponse
+    public function destroy(Application $application)
     {
-        Gate::authorize('delete', $application);
+        // Vérification d'autorisation manuelle
+        $user = auth()->user();
+        if (!$user || $user->id !== $application->user_id) {
+            return response()->json(['error' => 'Non autorisé'], 403);
+        }
+
         $application->delete();
         return response()->json(null, 204);
     }

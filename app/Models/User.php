@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token'
     ];
-    private mixed $role;
+    protected string $role = 'admin';
 
     public function getJWTIdentifier()
     {
