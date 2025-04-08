@@ -1,6 +1,6 @@
 <?php
 
-namespace Tymon\JWTAuth\Providers;
+namespace PHPOpenSourceSaver\JWTAuth\Providers\LaravelServiceProvider;
 
 class JWTAuthServiceProvider
 {
